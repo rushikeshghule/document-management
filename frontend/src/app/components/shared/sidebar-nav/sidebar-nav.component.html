@@ -1,0 +1,73 @@
+<div class="sidebar" [class.collapsed]="isCollapsed" [class.mobile-open]="isMobileOpen">
+  <div class="logo">
+    <i class="bi bi-file-earmark-text"></i>
+    <div class="logo-text">DocVault</div>
+  </div>
+  
+  <div class="toggle-btn" (click)="toggleSidebar()" title="Toggle Sidebar">
+    <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+  </div>
+  
+  <div class="nav-section-title">Main</div>
+  <ul class="nav-list">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+        <i class="bi bi-grid"></i>
+        <span class="link-text">Dashboard</span>
+        <span class="nav-indicator"></span>
+      </a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/documents" routerLinkActive="active">
+        <i class="bi bi-file-earmark-text"></i>
+        <span class="link-text">Documents</span>
+        <span class="nav-indicator"></span>
+      </a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/recents" routerLinkActive="active">
+        <i class="bi bi-clock-history"></i>
+        <span class="link-text">Recent Files</span>
+        <span class="nav-indicator"></span>
+      </a>
+    </li>
+    
+    <div class="nav-divider"></div>
+    <div class="nav-section-title">Administration</div>
+    
+    <li class="nav-item" *ngIf="currentUser?.role === 'admin'">
+      <a class="nav-link" routerLink="/users" routerLinkActive="active">
+        <i class="bi bi-people-fill"></i>
+        <span class="link-text">User Management</span>
+        <span class="nav-indicator"></span>
+      </a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/settings" routerLinkActive="active">
+        <i class="bi bi-gear"></i>
+        <span class="link-text">Settings</span>
+        <span class="nav-indicator"></span>
+      </a>
+    </li>
+  </ul>
+  
+  <div class="nav-footer" *ngIf="currentUser">
+    <div class="user-avatar">
+      {{ (currentUser.username && currentUser.username.charAt(0).toUpperCase()) || 'U' }}
+    </div>
+    <div class="user-info">
+      <span class="username">{{ currentUser.username || currentUser.email }}</span>
+      <span class="role">{{ currentUser.role }}</span>
+    </div>
+    
+    <button class="logout-btn" (click)="logout()" title="Logout">
+      <i class="bi bi-box-arrow-right"></i>
+      <span>Logout</span>
+    </button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" [class.active]="isMobileOpen && !isCollapsed" (click)="closeMobileMenu()"></div>

@@ -1,0 +1,331 @@
+// Variables
+$sidebar-width: 260px;
+$sidebar-collapsed-width: 70px;
+$transition-duration: 0.3s;
+$primary-color: #4f46e5;
+$primary-light: #6366f1;
+$accent-color: #10b981;
+$text-light: #f9fafb;
+$text-muted: #94a3b8;
+$bg-dark: #111827;
+$bg-darker: #0f172a;
+$border-color: rgba(255, 255, 255, 0.08);
+
+.sidebar {
+  width: $sidebar-width;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background: $bg-dark;
+  color: $text-light;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: width $transition-duration cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+    
+    .logo {
+      padding: 18px 0;
+      justify-content: center;
+      
+      .logo-text {
+        display: none;
+      }
+      
+      i {
+        margin-right: 0;
+        transform: scale(1.2);
+      }
+    }
+    
+    .nav-item {
+      .nav-link {
+        padding: 12px 0;
+        justify-content: center;
+        
+        .link-text {
+          display: none;
+        }
+        
+        i {
+          margin: 0;
+          font-size: 1.5rem;
+        }
+
+        .nav-indicator {
+          right: 12px;
+        }
+      }
+    }
+    
+    .nav-footer {
+      flex-direction: column;
+      padding: 12px 0;
+      
+      .user-avatar {
+        margin: 0 auto 8px;
+      }
+      
+      .user-info {
+        display: none;
+      }
+      
+      .logout-btn {
+        margin: 0;
+        padding: 10px;
+        width: 40px;
+        height: 40px;
+        
+        span {
+          display: none;
+        }
+      }
+    }
+
+    .toggle-btn {
+      right: 18px;
+    }
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    padding: 18px 24px;
+    height: 70px;
+    border-bottom: 1px solid $border-color;
+    background-color: $bg-darker;
+    
+    i {
+      font-size: 1.8rem;
+      margin-right: 14px;
+      color: $primary-light;
+    }
+    
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: $text-light;
+      white-space: nowrap;
+    }
+  }
+  
+  .nav-list {
+    list-style: none;
+    padding: 18px 12px;
+    margin: 0;
+    flex: 1;
+    
+    .nav-item {
+      margin-bottom: 6px;
+      position: relative;
+      
+      .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        color: $text-muted;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        position: relative;
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.06);
+          color: $text-light;
+        }
+        
+        &.active {
+          background-color: rgba(79, 70, 229, 0.15);
+          color: $text-light;
+          
+          i {
+            color: $primary-light;
+          }
+
+          .nav-indicator {
+            opacity: 1;
+          }
+        }
+        
+        i {
+          font-size: 1.25rem;
+          margin-right: 14px;
+          width: 24px;
+          text-align: center;
+        }
+        
+        .link-text {
+          font-weight: 500;
+          font-size: 0.95rem;
+        }
+
+        .nav-indicator {
+          position: absolute;
+          right: 16px;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: $accent-color;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        }
+      }
+    }
+  }
+  
+  .nav-section-title {
+    color: $text-muted;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    padding: 16px 16px 8px;
+  }
+  
+  .nav-footer {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background-color: $bg-darker;
+    border-top: 1px solid $border-color;
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background-color: $primary-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-weight: 600;
+      color: white;
+      font-size: 1rem;
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      margin-right: auto;
+      overflow: hidden;
+      
+      .username {
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: $text-light;
+      }
+      
+      .role {
+        font-size: 0.75rem;
+        color: $text-muted;
+        text-transform: capitalize;
+      }
+    }
+    
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.06);
+      color: $text-light;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+      
+      i {
+        font-size: 1.1rem;
+        margin-right: 8px;
+      }
+      
+      span {
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .toggle-btn {
+    position: absolute;
+    top: 70px;
+    right: 22px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: $primary-light;
+      transform: scale(1.1);
+    }
+    
+    i {
+      font-size: 0.85rem;
+      line-height: 1;
+      transition: transform 0.3s ease;
+    }
+    
+    .collapsed & i {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+// Dividers for navigation sections
+.nav-divider {
+  height: 1px;
+  background-color: $border-color;
+  margin: 12px 0;
+  opacity: 0.5;
+}
+
+// Mobile navigation overlay
+@media (max-width: 991.98px) {
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    display: none;
+  }
+  
+  .sidebar-overlay.active {
+    display: block;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+    
+    &.mobile-open {
+      transform: translateX(0);
+    }
+  }
+}

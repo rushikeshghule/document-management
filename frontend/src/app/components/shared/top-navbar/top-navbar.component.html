@@ -1,0 +1,68 @@
+<div class="top-navbar" [class.sidebar-collapsed]="sidebarCollapsed">
+  <div class="container-fluid">
+    <!-- Left part -->
+    <div class="navbar-left">
+      <button class="mobile-toggle" (click)="toggleMobileSidebar()" title="Toggle Sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      
+      <div class="navbar-title">{{ pageTitle }}</div>
+      
+      <div class="breadcrumb-wrapper">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ pageTitle }}</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    
+    <!-- Center - Search -->
+    <div class="search-wrapper">
+      <input type="text" class="search-input" placeholder="Search documents..." aria-label="Search">
+      <i class="bi bi-search search-icon"></i>
+    </div>
+    
+    <!-- Right part -->
+    <div class="navbar-right">
+      <button class="notification-btn" title="Notifications">
+        <i class="bi bi-bell"></i>
+        <span class="notification-badge"></span>
+      </button>
+      
+      <button class="help-btn" title="Help">
+        <i class="bi bi-question-circle"></i>
+      </button>
+      
+      <div class="user-dropdown" *ngIf="currentUser">
+        <button class="dropdown-toggle" (click)="isDropdownOpen = !isDropdownOpen">
+          <div class="user-avatar">
+            {{ (currentUser.username && currentUser.username.charAt(0).toUpperCase()) || 'U' }}
+          </div>
+          <div class="user-info">
+            <span class="username">{{ currentUser.username || currentUser.email }}</span>
+            <span class="user-role">{{ currentUser.role }}</span>
+          </div>
+          <i class="bi bi-chevron-down dropdown-icon"></i>
+        </button>
+        
+        <div class="dropdown-menu" [class.show]="isDropdownOpen">
+          <a class="dropdown-item">
+            <i class="bi bi-person"></i>
+            <span>My Profile</span>
+          </a>
+          <a class="dropdown-item">
+            <i class="bi bi-gear"></i>
+            <span>Account Settings</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

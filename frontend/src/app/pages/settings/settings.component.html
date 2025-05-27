@@ -1,0 +1,196 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="page-title">Settings</h1>
+      <p class="text-muted">Manage your account and application preferences</p>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 mb-4">
+      <div class="settings-nav card sticky-top">
+        <div class="list-group list-group-flush">
+          <button 
+            *ngFor="let section of settingSections" 
+            class="list-group-item list-group-item-action"
+            [class.active]="activeSection === section.id"
+            (click)="setActiveSection(section.id)">
+            <i [class]="section.icon + ' me-2'"></i>
+            {{ section.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-9">
+      <!-- Loading state -->
+      <div class="card mb-4" *ngIf="isLoading">
+        <div class="card-body text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2">Loading settings...</p>
+        </div>
+      </div>
+      
+      <!-- Error state (for initial loading) -->
+      <div class="alert alert-danger" *ngIf="!isLoading && error && !isSubmitting">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadUserSettings()">Retry</button>
+      </div>
+      
+      <!-- Account Settings -->
+      <div class="card mb-4" *ngIf="!isLoading && activeSection === 'account'">
+        <div class="card-header">
+          <h5 class="mb-0">Account Settings</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success" *ngIf="successMessage">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+          </div>
+          
+          <div class="alert alert-danger" *ngIf="error && isSubmitting">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+          </div>
+          
+          <form [formGroup]="accountForm" (ngSubmit)="saveAccountSettings()">
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullName" formControlName="fullName">
+            </div>
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" formControlName="email">
+            </div>
+            
+            <div class="mb-3">
+              <label for="jobTitle" class="form-label">Job Title</label>
+              <input type="text" class="form-control" id="jobTitle" formControlName="jobTitle">
+            </div>
+            
+            <div class="mb-4">
+              <label for="department" class="form-label">Department</label>
+              <select class="form-select" id="department" formControlName="department">
+                <option value="">Select Department</option>
+                <option value="hr">Human Resources</option>
+                <option value="finance">Finance</option>
+                <option value="it">Information Technology</option>
+                <option value="marketing">Marketing</option>
+                <option value="operations">Operations</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || !accountForm.valid">
+              <span class="spinner-border spinner-border-sm me-1" role="status" *ngIf="isSubmitting"></span>
+              {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Security Settings -->
+      <div class="card mb-4" *ngIf="!isLoading && activeSection === 'security'">
+        <div class="card-header">
+          <h5 class="mb-0">Security Settings</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success" *ngIf="successMessage">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+          </div>
+          
+          <div class="alert alert-danger" *ngIf="error">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+          </div>
+          
+          <form [formGroup]="securityForm" (ngSubmit)="saveSecuritySettings()">
+            <div class="mb-3">
+              <label for="currentPassword" class="form-label">Current Password</label>
+              <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword">
+            </div>
+            
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newPassword" formControlName="newPassword">
+            </div>
+            
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+            </div>
+            
+            <div class="mb-4">
+              <h6 class="mb-3">Two-Factor Authentication</h6>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="twoFactorEnabled" formControlName="twoFactorEnabled">
+                <label class="form-check-label" for="twoFactorEnabled">Enable Two-Factor Authentication</label>
+              </div>
+              <small class="text-muted">Adds an extra layer of security to your account</small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || !securityForm.valid">
+              <span class="spinner-border spinner-border-sm me-1" role="status" *ngIf="isSubmitting"></span>
+              {{ isSubmitting ? 'Updating...' : 'Update Security Settings' }}
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Display Settings -->
+      <div class="card mb-4" *ngIf="!isLoading && activeSection === 'display'">
+        <div class="card-header">
+          <h5 class="mb-0">Display Settings</h5>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-success" *ngIf="successMessage">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+          </div>
+          
+          <div class="alert alert-danger" *ngIf="error">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+          </div>
+          
+          <form [formGroup]="displayForm" (ngSubmit)="saveDisplaySettings()">
+            <div class="mb-3">
+              <label for="theme" class="form-label">Theme</label>
+              <select class="form-select" id="theme" formControlName="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">Use System Setting</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="fontSize" class="form-label">Font Size</label>
+              <select class="form-select" id="fontSize" formControlName="fontSize">
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+            
+            <div class="mb-4">
+              <label for="defaultView" class="form-label">Default Document View</label>
+              <select class="form-select" id="defaultView" formControlName="defaultView">
+                <option value="list">List View</option>
+                <option value="grid">Grid View</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || !displayForm.valid">
+              <span class="spinner-border spinner-border-sm me-1" role="status" *ngIf="isSubmitting"></span>
+              {{ isSubmitting ? 'Saving...' : 'Save Display Settings' }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

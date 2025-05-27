@@ -1,0 +1,170 @@
+<div class="document-viewer-container" [class.fullscreen]="isFullscreen">
+  <div class="alert alert-danger" *ngIf="error">
+    <h5 class="alert-heading">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>Error Loading Document
+    </h5>
+    <p>{{ error }}</p>
+    <div class="mt-2">
+      <a routerLink="/documents" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Documents
+      </a>
+    </div>
+  </div>
+  
+  <div *ngIf="loading" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading document content...</p>
+  </div>
+  
+  <ng-container *ngIf="!loading && document">
+    <div class="document-toolbar bg-light p-2 mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="document-info">
+          <h5 class="mb-0">{{ document.title }}</h5>
+          <small class="text-muted">
+            {{ document.file_type }} - {{ document.file_size | number }} bytes
+          </small>
+        </div>
+        
+        <div class="document-actions">
+          <div class="input-group search-box me-2" *ngIf="document.status === 'completed' && document.content && !isPdfFile">
+            <input type="text" class="form-control form-control-sm" placeholder="Search..." 
+              [(ngModel)]="searchTerm">
+            <button class="btn btn-sm btn-outline-secondary" type="button">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+          
+          <div class="btn-group btn-group-sm me-2" *ngIf="document.status === 'completed' && document.content && !isPdfFile">
+            <button class="btn btn-outline-secondary" (click)="zoomOut()" ngbTooltip="Zoom Out">
+              <i class="bi bi-zoom-out"></i>
+            </button>
+            <button class="btn btn-outline-secondary" (click)="resetZoom()" ngbTooltip="Reset Zoom">
+              {{ (zoomLevel * 100).toFixed(0) }}%
+            </button>
+            <button class="btn btn-outline-secondary" (click)="zoomIn()" ngbTooltip="Zoom In">
+              <i class="bi bi-zoom-in"></i>
+            </button>
+          </div>
+          
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary" (click)="toggleAnnotations()" 
+              [class.active]="showAnnotations" *ngIf="document.status === 'completed' && document.content && !isPdfFile" ngbTooltip="Toggle Annotations">
+              <i class="bi bi-chat-square-text"></i>
+            </button>
+            <button class="btn btn-outline-secondary" (click)="toggleHighlight()" 
+              [class.active]="contentHighlighted" *ngIf="document.status === 'completed' && document.content && !isPdfFile" ngbTooltip="Toggle Highlight">
+              <i class="bi bi-highlighter"></i>
+            </button>
+            <button class="btn btn-outline-secondary" (click)="downloadDocument()" 
+              *ngIf="document.file_url" ngbTooltip="Download">
+              <i class="bi bi-download"></i>
+            </button>
+            <button class="btn btn-outline-secondary" (click)="toggleFullscreen()" 
+              *ngIf="document.status === 'completed' && (document.content || isPdfFile)" ngbTooltip="Toggle Fullscreen">
+              <i class="bi" [ngClass]="isFullscreen ? 'bi-fullscreen-exit' : 'bi-fullscreen'"></i>
+            </button>
+            <button class="btn btn-outline-secondary" (click)="goBack()" ngbTooltip="Back">
+              <i class="bi bi-arrow-left"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="document-content-container">
+      <!-- PDF Viewer Section -->
+      <div *ngIf="isPdfFile && pdfSrc" class="pdf-viewer-container">
+        <ngx-extended-pdf-viewer
+          [src]="pdfSrc"
+          [height]="'calc(100vh - 180px)'">
+        </ngx-extended-pdf-viewer>
+        
+        <div class="pdf-fallback-container">
+          <div class="alert alert-info">
+            <h5 class="alert-heading">PDF Viewer</h5>
+            <p>If the PDF viewer isn't loading correctly, you can:</p>
+            <div class="d-flex gap-2 mt-3">
+              <a [href]="pdfSrc" class="btn btn-primary" target="_blank">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Open PDF in New Tab
+              </a>
+              <a [href]="pdfSrc" class="btn btn-secondary" download>
+                <i class="bi bi-download me-1"></i> Download PDF
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Content Section -->
+      <div *ngIf="!isPdfFile" class="document-content" [style.transform]="'scale(' + zoomLevel + ')'">
+        <ng-container *ngIf="document.status === 'completed' && document.content">
+          <div class="content-area" [class.highlighted]="contentHighlighted" 
+            [innerHTML]="filterContent()"></div>
+        </ng-container>
+        
+        <div class="alert" [ngClass]="document.status === 'failed' ? 'alert-danger' : (document.status === 'completed' && !document.content) ? 'alert-warning' : 'alert-info'" 
+             *ngIf="document.status !== 'completed' || !document.content">
+          <div *ngIf="document.status === 'pending'">
+            <i class="bi bi-hourglass me-2"></i>
+            <p>This document is pending processing. Click the "Process Document" button to extract the content.</p>
+            <a [routerLink]="['/documents', document.id]" class="btn btn-sm btn-primary">
+              Go to Document Details
+            </a>
+          </div>
+          <div *ngIf="document.status === 'processing'">
+            <i class="bi bi-arrow-repeat me-2"></i>
+            <p>This document is currently being processed. The content will be available once processing is complete.</p>
+          </div>
+          <div *ngIf="document.status === 'failed'">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <p>Processing of this document failed. Please try processing it again or contact support.</p>
+            <a [routerLink]="['/documents', document.id]" class="btn btn-sm btn-primary">
+              Go to Document Details
+            </a>
+          </div>
+          <div *ngIf="document.status === 'completed' && !document.content">
+            <i class="bi bi-file-earmark-x me-2"></i>
+            <h5 class="alert-heading">Document processed but no content available</h5>
+            <p>The document was successfully processed but no text content could be extracted. This may happen with:</p>
+            <ul>
+              <li>Scanned documents without OCR</li>
+              <li>Image-only PDF files</li>
+              <li>Password-protected documents</li>
+              <li>Files with unrecognized content format</li>
+            </ul>
+            <hr>
+            <p class="mb-1">Options:</p>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+              <a [routerLink]="['/documents', document.id]" class="btn btn-sm btn-primary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Document Details
+              </a>
+              <a *ngIf="document.file_url" [href]="document.file_url" class="btn btn-sm btn-secondary" target="_blank">
+                <i class="bi bi-download me-1"></i> Download Original File
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="document-annotations" *ngIf="showAnnotations && !isPdfFile">
+        <div class="annotations-header">
+          <h6>Annotations</h6>
+        </div>
+        <div class="annotations-content">
+          <p class="text-muted small">No annotations available. This feature is coming soon.</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  
+  <div class="alert alert-warning" *ngIf="!loading && !document && !error">
+    <i class="bi bi-question-circle me-2"></i>
+    <p>No document data available. This could be due to an invalid document ID or a server error.</p>
+    <a routerLink="/documents" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back to Documents List
+    </a>
+  </div>
+</div>

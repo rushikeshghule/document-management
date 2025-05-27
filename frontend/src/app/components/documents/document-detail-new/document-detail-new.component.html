@@ -1,0 +1,95 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Document Details</h2>
+    <div class="action-buttons">
+      <a routerLink="/documents" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left"></i> Back to Documents
+      </a>
+      <a [routerLink]="['/documents', document?.id, 'view']" class="btn btn-primary" *ngIf="document?.status === 'completed'">
+        <i class="bi bi-eye"></i> View Document
+      </a>
+    </div>
+  </div>
+  
+  <div class="alert alert-danger" *ngIf="error">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+  </div>
+  
+  <div *ngIf="loading" class="text-center p-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  
+  <ng-container *ngIf="!loading && document">
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="h5 mb-0">{{ document.title }}</h3>
+        <span class="status-badge" [ngClass]="'status-' + document.status">
+          {{ document.status }}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <p class="mb-2"><strong>Uploaded by:</strong> {{ document.uploaded_by_email }}</p>
+            <p class="mb-2"><strong>Uploaded on:</strong> {{ document.created_at | date:'medium' }}</p>
+            <p class="mb-2" *ngIf="document.updated_at"><strong>Last updated:</strong> {{ document.updated_at | date:'medium' }}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-2"><strong>Status:</strong> <span class="status-badge" [ngClass]="'status-' + document.status">{{ document.status }}</span></p>
+            <p class="mb-2" *ngIf="document.file_size"><strong>File Size:</strong> {{ formatFileSize(document.file_size) }}</p>
+            <p class="mb-2" *ngIf="document.file_type"><strong>File Type:</strong> {{ document.file_type }}</p>
+          </div>
+        </div>
+
+        <h5>Description</h5>
+        <p>{{ document.description || 'No description provided' }}</p>
+
+        <div class="mt-4" *ngIf="isEditor">
+          <h5>Actions</h5>
+          <div class="btn-group">
+            <button 
+              *ngIf="document.status === 'pending' || document.status === 'failed'" 
+              class="btn btn-outline-primary"
+              (click)="triggerIngestion(document.id)">
+              <i class="bi bi-play-fill"></i> Process Document
+            </button>
+            <a [href]="document.file_url" target="_blank" class="btn btn-outline-secondary" *ngIf="document.file_url" ngbTooltip="Download Original">
+              <i class="bi bi-download"></i> Download Original
+            </a>
+            <button class="btn btn-outline-danger" (click)="deleteDocument()" ngbTooltip="Delete Document">
+              <i class="bi bi-trash"></i> Delete Document
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card" *ngIf="document.status === 'completed' && document.content">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Document Content Preview</h5>
+        <a [routerLink]="['/documents', document.id, 'view']" class="btn btn-sm btn-outline-primary">
+          Open Full Viewer
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="document-content">
+          <pre>{{ document.content.substring(0, 500) }}{{ document.content.length > 500 ? '...' : '' }}</pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="alert alert-info" *ngIf="document.status !== 'completed'">
+      <p *ngIf="document.status === 'pending'">
+        This document is pending processing. Click the "Process Document" button to extract the content.
+      </p>
+      <p *ngIf="document.status === 'processing'">
+        This document is currently being processed. The content will be available once processing is complete.
+      </p>
+      <p *ngIf="document.status === 'failed'">
+        Processing of this document failed. Please try processing it again or contact support.
+      </p>
+    </div>
+  </ng-container>
+</div>

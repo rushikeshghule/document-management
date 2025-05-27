@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="page-title">Recent Files</h1>
+      <p class="text-muted">Your recently accessed documents</p>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Recently Accessed</h5>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-funnel"></i> Filter
+            </button>
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-sort-down"></i> Sort
+            </button>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Loading indicator -->
+          <div class="text-center py-5" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading recent documents...</p>
+          </div>
+          
+          <!-- Error state -->
+          <div class="alert alert-danger" *ngIf="error">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+            <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadRecentFiles()">Retry</button>
+          </div>
+          
+          <!-- Data table -->
+          <div class="table-responsive" *ngIf="!isLoading && !error">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Last Accessed</th>
+                  <th>Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let file of recentFiles; let i = index">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <i [class]="getFileIcon(file.type)" class="file-icon me-2"></i>
+                      <span>{{ file.name }}</span>
+                    </div>
+                  </td>
+                  <td>{{ file.type }}</td>
+                  <td>{{ file.last_accessed | date: 'medium' }}</td>
+                  <td>{{ file.size | fileSize }}</td>
+                  <td>
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-icon" title="View" (click)="viewDocument(file.id)">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button class="btn btn-sm btn-icon" title="Download" (click)="downloadDocument(file)">
+                        <i class="bi bi-download"></i>
+                      </button>
+                      <button class="btn btn-sm btn-icon" title="More">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                
+                <!-- Empty state -->
+                <tr *ngIf="recentFiles.length === 0 && !isLoading && !error">
+                  <td colspan="5" class="text-center py-5">
+                    <div class="empty-state">
+                      <i class="bi bi-clock-history display-4 mb-3"></i>
+                      <h5>No recent files</h5>
+                      <p class="text-muted">Your recently accessed files will appear here</p>
+                      <button class="btn btn-primary" routerLink="/documents">
+                        <i class="bi bi-folder2-open me-2"></i> Browse Files
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
