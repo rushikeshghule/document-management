@@ -65,6 +65,20 @@ import { AuthService } from '../../../services/auth.service';
           </div>
           
           <div class="mb-3">
+            <label for="role" class="form-label">Account Type</label>
+            <select
+              id="role"
+              formControlName="role"
+              class="form-control"
+              [ngClass]="{'is-invalid': submitted && f['role'].errors}"
+            >
+              <option value="viewer">Viewer (View documents only)</option>
+              <option value="editor">Editor (Upload and manage documents)</option>
+            </select>
+            <small class="form-text text-white-50">Note: Admin accounts can only be created by existing administrators.</small>
+          </div>
+          
+          <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input 
               type="password" 
@@ -225,6 +239,7 @@ export class RegisterComponent {
       first_name: [''],
       last_name: [''],
       email: ['', [Validators.required, Validators.email]],
+      role: ['viewer', Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],
       password_confirm: ['', Validators.required]
     }, {

@@ -48,11 +48,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
         
         # Filter by user's access permissions
         user = self.request.user
-        if not user.is_admin:  # Admin sees all documents
-            # User sees documents they uploaded
-            queryset = queryset.filter(uploaded_by=user)
-        
-        return queryset
+        if user.is_admin or user.role == 'viewer':
+            # Admins and viewers see all documents
+            return queryset
+        else:
+            # Editors only see documents they uploaded
+            return queryset.filter(uploaded_by=user)
     
     def perform_create(self, serializer):
         """Save the uploaded_by as the current user"""
