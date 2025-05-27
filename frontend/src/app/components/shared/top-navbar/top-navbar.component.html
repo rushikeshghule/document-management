@@ -26,15 +26,6 @@
     
     <!-- Right part -->
     <div class="navbar-right">
-      <button class="notification-btn" title="Notifications">
-        <i class="bi bi-bell"></i>
-        <span class="notification-badge"></span>
-      </button>
-      
-      <button class="help-btn" title="Help">
-        <i class="bi bi-question-circle"></i>
-      </button>
-      
       <div class="user-dropdown" *ngIf="currentUser">
         <button class="dropdown-toggle" (click)="isDropdownOpen = !isDropdownOpen">
           <div class="user-avatar">
@@ -48,13 +39,13 @@
         </button>
         
         <div class="dropdown-menu" [class.show]="isDropdownOpen">
-          <a class="dropdown-item">
+          <a class="dropdown-item" routerLink="/profile">
             <i class="bi bi-person"></i>
             <span>My Profile</span>
           </a>
-          <a class="dropdown-item">
+          <a class="dropdown-item" routerLink="/settings">
             <i class="bi bi-gear"></i>
-            <span>Account Settings</span>
+            <span>Settings</span>
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="logout()">

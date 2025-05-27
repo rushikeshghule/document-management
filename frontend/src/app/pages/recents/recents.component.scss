@@ -1,0 +1,267 @@
+.page-title {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 4px;
+    background: linear-gradient(to right, #4f46e5, #6366f1);
+    border-radius: 2px;
+  }
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .card-header {
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem 1.5rem;
+    
+    h5 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #333;
+      
+      i {
+        color: #4f46e5;
+      }
+    }
+    
+    .header-actions {
+      .input-group {
+        width: 250px;
+        
+        .input-group-text {
+          background-color: #f9fafb;
+          border-color: #e5e7eb;
+          color: #6b7280;
+        }
+        
+        .form-control {
+          border-color: #e5e7eb;
+          box-shadow: none;
+          
+          &:focus {
+            border-color: #4f46e5;
+          }
+        }
+      }
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.table {
+  margin-bottom: 0;
+  
+  th {
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #f3f4f6;
+    padding: 0.75rem 1rem;
+  }
+  
+  td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  tbody tr {
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: #f9fafb;
+    }
+  }
+  
+  .file-name {
+    color: #111827;
+    margin-bottom: 0.25rem;
+  }
+  
+  .file-description {
+    line-height: 1.2;
+  }
+  
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    text-transform: uppercase;
+  }
+}
+
+.file-icon {
+  font-size: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  
+  &.bi-file-earmark-pdf {
+    color: #ef4444;
+    background-color: #fee2e2;
+  }
+  
+  &.bi-file-earmark-word {
+    color: #3b82f6;
+    background-color: #dbeafe;
+  }
+  
+  &.bi-file-earmark-excel {
+    color: #22c55e;
+    background-color: #dcfce7;
+  }
+  
+  &.bi-file-earmark-ppt {
+    color: #f97316;
+    background-color: #ffedd5;
+  }
+  
+  &.bi-file-earmark-text {
+    color: #64748b;
+    background-color: #f1f5f9;
+  }
+  
+  &.bi-file-earmark-image {
+    color: #8b5cf6;
+    background-color: #ede9fe;
+  }
+}
+
+.btn-group {
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: transparent;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+    margin-right: 0.5rem;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #f9fafb;
+      color: #4f46e5;
+      border-color: #e0e7ff;
+    }
+    
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: transparent;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #f9fafb;
+    color: #4f46e5;
+    border-color: #e0e7ff;
+  }
+  
+  &:last-child {
+    margin-right: 0;
+  }
+  
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.empty-state {
+  padding: 2rem 0;
+  
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    
+    i {
+      font-size: 2.5rem;
+      color: #9ca3af;
+    }
+  }
+  
+  h5 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .btn-primary {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+    
+    &:hover {
+      background-color: #4338ca;
+      border-color: #4338ca;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .header-actions {
+    .input-group {
+      width: 100% !important;
+    }
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+    
+    .header-actions {
+      width: 100%;
+    }
+  }
+}

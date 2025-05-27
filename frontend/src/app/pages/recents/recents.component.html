@@ -10,14 +10,14 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Recently Accessed</h5>
-          <div class="btn-group">
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="bi bi-funnel"></i> Filter
-            </button>
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="bi bi-sort-down"></i> Sort
-            </button>
+          <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recently Accessed</h5>
+          <div class="header-actions">
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" class="form-control border-start-0 ps-0" placeholder="Search files...">
+            </div>
           </div>
         </div>
         
@@ -39,37 +39,40 @@
           
           <!-- Data table -->
           <div class="table-responsive" *ngIf="!isLoading && !error">
-            <table class="table table-hover">
+            <table class="table">
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Type</th>
                   <th>Last Accessed</th>
                   <th>Size</th>
-                  <th>Actions</th>
+                  <th class="text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let file of recentFiles; let i = index">
                   <td>
                     <div class="d-flex align-items-center">
-                      <i [class]="getFileIcon(file.type)" class="file-icon me-2"></i>
-                      <span>{{ file.name }}</span>
+                      <i [class]="getFileIcon(file.type)" class="file-icon me-3"></i>
+                      <div>
+                        <div class="file-name fw-semibold">{{ file.name }}</div>
+                        <div class="file-description small text-muted" *ngIf="file.description">{{ file.description }}</div>
+                      </div>
                     </div>
                   </td>
-                  <td>{{ file.type }}</td>
-                  <td>{{ file.last_accessed | date: 'medium' }}</td>
+                  <td><span class="badge bg-light text-dark">{{ file.type }}</span></td>
+                  <td>{{ file.last_accessed | date: 'MMM d, y, h:mm a' }}</td>
                   <td>{{ file.size | fileSize }}</td>
                   <td>
-                    <div class="btn-group">
-                      <button class="btn btn-sm btn-icon" title="View" (click)="viewDocument(file.id)">
+                    <div class="d-flex justify-content-end">
+                      <button class="btn btn-icon" title="View" (click)="viewDocument(file.id)">
                         <i class="bi bi-eye"></i>
                       </button>
-                      <button class="btn btn-sm btn-icon" title="Download" (click)="downloadDocument(file)">
+                      <button class="btn btn-icon" title="Download" (click)="downloadDocument(file)">
                         <i class="bi bi-download"></i>
                       </button>
-                      <button class="btn btn-sm btn-icon" title="More">
-                        <i class="bi bi-three-dots"></i>
+                      <button class="btn btn-icon" title="More">
+                        <i class="bi bi-three-dots-vertical"></i>
                       </button>
                     </div>
                   </td>
@@ -79,11 +82,13 @@
                 <tr *ngIf="recentFiles.length === 0 && !isLoading && !error">
                   <td colspan="5" class="text-center py-5">
                     <div class="empty-state">
-                      <i class="bi bi-clock-history display-4 mb-3"></i>
+                      <div class="empty-icon mb-4">
+                        <i class="bi bi-clock-history"></i>
+                      </div>
                       <h5>No recent files</h5>
                       <p class="text-muted">Your recently accessed files will appear here</p>
-                      <button class="btn btn-primary" routerLink="/documents">
-                        <i class="bi bi-folder2-open me-2"></i> Browse Files
+                      <button class="btn btn-primary mt-3" routerLink="/documents">
+                        <i class="bi bi-folder2-open me-2"></i> Browse Documents
                       </button>
                     </div>
                   </td>
