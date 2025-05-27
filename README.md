@@ -4,21 +4,36 @@ A comprehensive document management system built with Django backend and Angular
 
 ![DocVault](https://img.shields.io/badge/DocVault-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Angular](https://img.shields.io/badge/Angular-19.0.0-dd0031)
+![Django](https://img.shields.io/badge/Django-5.0-092e20)
 
 ## 📋 Features
 
-- **User Authentication**: Secure JWT-based authentication system with login/register functionality
+- **User Authentication**: Secure JWT-based authentication system with login/register functionality and role selection
 - **Role-Based Access Control**: Admin, Editor, and Viewer roles with appropriate permissions
 - **Document Management**:
-  - Upload documents (PDF, Word, TXT, etc.)
+  - Upload documents (PDF, Word, TXT, etc.) with modern drag & drop interface
   - View documents directly in the browser
   - Extract and index document content
   - Track document access history
-- **Dashboard**: Overview of recent documents and system activity
+- **Dashboard**: Overview of recent documents and system activity with visual cards
 - **User Management**: Admin interface for user administration
-- **Recent Files**: Quick access to recently viewed documents
+- **Recent Files**: Quick access to recently viewed documents with intuitive UI
 - **Settings**: Customizable user profile and application settings
-- **Responsive Design**: Works on desktop, tablet, and mobile devices
+- **Responsive Design**: Fully responsive design that works flawlessly on desktop, tablet, and mobile devices
+
+## 🎨 UI Features
+
+- **Modern Interface**: Clean, intuitive user interface with consistent design language
+- **Dashboard**: Visual dashboard with gradient cards and interactive elements
+- **Document Cards**: Stylish document cards with appropriate file type icons and hover effects
+- **Upload Interface**: Enhanced upload form with drag & drop functionality and visual step indicators
+- **Navigation**: Collapsible sidebar for better space utilization
+- **Dark Blue Top Navbar**: Professional navigation with user profile and dropdown menu
+- **File Type Indicators**: Custom badges and icons for different file types
+- **Responsive Layout**: Adapts seamlessly to different screen sizes
+- **Loading States**: Visual feedback during loading and processing operations
+- **Empty States**: User-friendly empty state displays with helpful messages
 
 ## 🛠️ Tech Stack
 
@@ -39,6 +54,7 @@ A comprehensive document management system built with Django backend and Angular
 - **RxJS**: Reactive programming
 - **PDF.js**: PDF rendering in browser
 - **NgBootstrap**: Angular components for Bootstrap
+- **Bootstrap Icons**: Comprehensive icon library
 
 ### DevOps
 - **GitHub Actions**: CI/CD pipeline
@@ -98,6 +114,22 @@ npm install
 npm start
 ```
 
+### Using PowerShell Scripts (Windows)
+For Windows users, we've provided helpful PowerShell scripts:
+```
+# Start both frontend and backend services
+.\start-app.ps1
+
+# Restart the application
+.\restart-app.ps1
+
+# Apply database migrations
+.\apply_migrations.ps1
+
+# Push code to GitHub
+.\push-to-github.ps1
+```
+
 ## 📁 Project Structure
 
 ```
@@ -112,25 +144,30 @@ document-management/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── components/  # UI components
-│   │   │   │   ├── components/  # UI components
-│   │   │   │   ├── services/    # API services
-│   │   │   │   ├── guards/      # Route guards
-│   │   │   │   ├── models/      # TypeScript interfaces
-│   │   │   │   └── pages/       # Page components
-│   │   │   └── assets/        # Static assets
-│   │   └── package.json      # Frontend dependencies
-│   └── README.md
+│   │   │   │   ├── dashboard/    # Dashboard components
+│   │   │   │   ├── documents/    # Document management components
+│   │   │   │   ├── shared/       # Shared UI components
+│   │   │   │   └── auth/         # Authentication components
+│   │   │   ├── pages/       # Page components
+│   │   │   ├── services/    # API services
+│   │   │   ├── guards/      # Route guards
+│   │   │   ├── interceptors/ # HTTP interceptors
+│   │   │   └── models/      # TypeScript interfaces
+│   │   ├── assets/        # Static assets
+│   │   └── environments/  # Environment configurations
+│   └── package.json      # Frontend dependencies
+└── PowerShell Scripts    # Helper scripts for development
 ```
 
 ## 🔒 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register/` - Register a new user
+- `POST /api/auth/register/` - Register a new user with role selection
 - `POST /api/auth/token/` - Obtain JWT tokens
 - `POST /api/auth/token/refresh/` - Refresh JWT token
 
 ### Documents
-- `GET /api/documents/` - List documents
+- `GET /api/documents/` - List documents (filtered by permissions)
 - `POST /api/documents/upload/` - Upload a document
 - `GET /api/documents/{id}/` - Get document details
 - `PATCH /api/documents/{id}/` - Update document metadata
@@ -154,11 +191,18 @@ The project includes a GitHub Actions workflow for continuous integration and de
 - **Building**: Packaging the application
 - **Deployment**: Automated deployment (configurable)
 
-## 🎮 Development Tools
+## 📱 Responsive Design
 
-- PowerShell scripts for local development:
-  - `start-app.ps1`: Starts both frontend and backend servers
-  - `push-to-github.ps1`: Helps push code to GitHub
+The application is fully responsive and works on:
+- **Desktop**: Full-featured experience with sidebar navigation
+- **Tablet**: Adaptive layout with collapsible sidebar
+- **Mobile**: Mobile-optimized view with hamburger menu and stacked components
+
+## 🔐 User Roles
+
+- **Admin**: Full access to all features, user management, and system configuration
+- **Editor**: Can upload, edit, and delete their own documents
+- **Viewer**: Can view documents shared with them but cannot modify content
 
 ## 🧪 Testing
 
@@ -173,6 +217,18 @@ python manage.py test
 cd frontend
 npm test
 ```
+
+## 🛠️ Recent Improvements
+
+- Enhanced UI with consistent design language and color scheme
+- Added user role selection during registration
+- Fixed permissions to allow viewers to access all documents
+- Improved document upload interface with drag & drop functionality
+- Modernized dashboard with interactive cards and better visualization
+- Optimized mobile experience with responsive design
+- Added custom file type indicators and badges
+- Implemented dark blue navigation bar for better contrast
+- Created PowerShell scripts for easier development workflow
 
 ## 📝 License
 
