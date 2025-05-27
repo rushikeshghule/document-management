@@ -71,4 +71,8 @@ testem.log
 
 # System Files
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# PowerShell scripts and Docker files
+*.ps1
+docker-compose.yml 
