@@ -53,7 +53,6 @@ export class AuthService {
       try {
         return localStorage.getItem(key);
       } catch (err) {
-        console.error('Error reading from localStorage:', err);
         return null;
       }
     }
@@ -65,7 +64,7 @@ export class AuthService {
       try {
         localStorage.setItem(key, value);
       } catch (err) {
-        console.error('Error writing to localStorage:', err);
+        // Storage error, possibly in private browsing mode
       }
     }
   }
@@ -75,7 +74,7 @@ export class AuthService {
       try {
         localStorage.removeItem(key);
       } catch (err) {
-        console.error('Error removing item from localStorage:', err);
+        // Storage error, possibly in private browsing mode
       }
     }
   }
@@ -90,14 +89,12 @@ export class AuthService {
       { email, password }
     ).pipe(
       tap(response => {
-        console.log('Login response:', response);
         localStorage.setItem('accessToken', response.access);
         localStorage.setItem('refreshToken', response.refresh);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.currentUserSubject.next(response.user);
       }),
       catchError(error => {
-        console.error('Login error:', error);
         return throwError(() => error);
       })
     );
@@ -107,7 +104,6 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register/`, userData)
       .pipe(
         catchError(error => {
-          console.error('Registration error:', error);
           return throwError(() => new Error('Registration failed. Please try again.'));
         })
       );
@@ -120,7 +116,7 @@ export class AuthService {
     if (refreshToken) {
       this.http.post(`${this.apiUrl}/logout/`, { refresh: refreshToken })
         .subscribe({
-          error: (err) => console.error('Error logging out on server:', err)
+          error: () => {} // Ignore errors during logout
         });
     }
     
@@ -145,7 +141,6 @@ export class AuthService {
           this.setLocalStorageItem('accessToken', response.access);
         }),
         catchError(error => {
-          console.error('Token refresh error:', error);
           this.logout();
           return throwError(() => new Error('Session expired. Please login again.'));
         })
@@ -155,7 +150,6 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.getLocalStorageItem('accessToken');
     const isTokenValid = !!token && !this.tokenHelper.isTokenExpired(token);
-    console.log('Auth check:', { token: !!token, isValid: isTokenValid });
     return isTokenValid;
   }
 
@@ -204,52 +198,10 @@ export class AuthService {
         try {
           return JSON.parse(userJson);
         } catch (e) {
-          console.error('Error parsing user JSON:', e);
+          return null;
         }
       }
     }
     return null;
-  }
-
-  /**
-   * Test method to verify login credentials and token storage
-   */
-  testLogin(email: string, password: string): Observable<any> {
-    console.log(`Testing login for ${email}`);
-    return this.http.post<any>(`${this.apiUrl}/login/`, { email, password })
-      .pipe(
-        tap(response => {
-          console.log('Login response raw:', response);
-          
-          // Store tokens and user
-          if (response.access) {
-            localStorage.setItem('accessToken', response.access);
-            console.log('Access token stored');
-          } else {
-            console.error('No access token in response');
-          }
-          
-          if (response.refresh) {
-            localStorage.setItem('refreshToken', response.refresh);
-            console.log('Refresh token stored');
-          } else {
-            console.error('No refresh token in response');
-          }
-          
-          if (response.user) {
-            localStorage.setItem('user', JSON.stringify(response.user));
-            this.currentUserSubject.next(response.user);
-            console.log('User data stored:', response.user);
-          } else {
-            console.error('No user data in response');
-          }
-          
-          return response;
-        }),
-        catchError(error => {
-          console.error('Test login error:', error);
-          return throwError(() => error);
-        })
-      );
   }
 } 

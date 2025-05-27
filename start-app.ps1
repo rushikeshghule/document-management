@@ -1,54 +1,21 @@
-# Start-App.ps1 - Script to start both frontend and backend
-# Usage: .\start-app.ps1
+# PowerShell script to start both frontend and backend services
+# This script works around the limitation that PowerShell doesn't support && for command chaining
 
-# Setup Python environment first
-Write-Host "Setting up Python environment..." -ForegroundColor Cyan
+Write-Host "Starting Document Management System..." -ForegroundColor Green
+Write-Host "====================================" -ForegroundColor Green
 
-# Check if Python is installed
-$pythonExists = $null
-try {
-    $pythonExists = Get-Command python -ErrorAction SilentlyContinue
-} catch {
-    $pythonExists = $null
-}
+# Start backend in a new PowerShell window
+Write-Host "Starting Django backend server..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\backend'; python manage.py runserver"
 
-if (-not $pythonExists) {
-    Write-Host "Python not found. Please install Python from https://www.python.org/downloads/" -ForegroundColor Red
-    Write-Host "Ensure Python is added to PATH during installation." -ForegroundColor Yellow
-    exit 1
-}
+# Give the backend some time to start up
+Start-Sleep -Seconds 2
 
-# Start Backend server
-$backendJob = Start-Job -ScriptBlock {
-    Set-Location "$using:PWD\backend"
-    python manage.py runserver
-}
+# Start frontend in a new PowerShell window
+Write-Host "Starting Angular frontend server..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\frontend'; npm start"
 
-Write-Host "Starting backend server at http://127.0.0.1:8000..." -ForegroundColor Green
-
-# Start Frontend server
-$frontendJob = Start-Job -ScriptBlock {
-    Set-Location "$using:PWD\frontend"
-    npm start
-}
-
-Write-Host "Starting frontend server at http://localhost:4200..." -ForegroundColor Green
-
-# Display job output
-Write-Host "`nBackend logs:" -ForegroundColor Cyan
-Receive-Job -Job $backendJob -Wait -AutoRemoveJob
-
-Write-Host "`nFrontend logs:" -ForegroundColor Cyan
-Receive-Job -Job $frontendJob -Wait -AutoRemoveJob
-
-# Keep script running
-try {
-    Write-Host "Press Ctrl+C to stop servers..." -ForegroundColor Yellow
-    Wait-Event -Timeout ([int]::MaxValue)
-} 
-finally {
-    # Clean up jobs
-    if ($backendJob) { Remove-Job -Job $backendJob -Force }
-    if ($frontendJob) { Remove-Job -Job $frontendJob -Force }
-    Write-Host "Servers stopped" -ForegroundColor Red
-} 
+Write-Host "`nServers are running in separate windows!" -ForegroundColor Cyan
+Write-Host "- Backend: http://localhost:8000" -ForegroundColor White
+Write-Host "- Frontend: http://localhost:4200" -ForegroundColor White
+Write-Host "`nPress Ctrl+C in each window to stop the servers when done." -ForegroundColor White 

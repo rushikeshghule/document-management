@@ -4,30 +4,21 @@ import { RouterModule } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../services/auth.service';
 import { AuthService } from '../../../services/auth.service';
-import { DebugInfoComponent } from '../../shared/debug-info/debug-info.component';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DebugInfoComponent],
+  imports: [CommonModule, RouterModule],
   template: `
     <div class="container-fluid p-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>User Management</h2>
         <div>
-          <button class="btn btn-warning me-2" (click)="testLoginAsAdmin()">
-            <i class="bi bi-door-open me-1"></i> Test Admin Login
-          </button>
-          <button class="btn btn-info me-2" (click)="checkAdminStatus()">
-            <i class="bi bi-shield-check me-1"></i> Check Admin Status
-          </button>
           <button class="btn btn-primary" (click)="refreshUserList()">
             <i class="bi bi-arrow-clockwise me-1"></i> Refresh
           </button>
         </div>
       </div>
-      
-      <app-debug-info></app-debug-info>
       
       <div class="alert alert-danger" *ngIf="error">
         {{ error }}
@@ -143,11 +134,9 @@ export class UserListComponent implements OnInit {
     this.loading = true;
     this.error = '';
     
-    console.log('Loading users...');
     this.userService.getUsers()
       .subscribe({
         next: (data) => {
-          console.log('Users loaded:', data);
           this.users = data;
           this.loading = false;
           
@@ -156,7 +145,6 @@ export class UserListComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error loading users:', error);
           this.error = `Failed to load users: ${error.message || error.statusText || 'Unknown error'}`;
           if (error.status === 403) {
             this.error += ' You do not have permission to view the user list.';
@@ -170,7 +158,6 @@ export class UserListComponent implements OnInit {
     this.selectedUser = { ...user };
     // In a real app, you would open the modal here
     // Example: this.modalService.open('editUserModal');
-    console.log('Edit user:', user);
   }
 
   toggleUserStatus(user: User): void {
@@ -179,15 +166,12 @@ export class UserListComponent implements OnInit {
       return;
     }
     
-    console.log(`Updating user status: ${user.id}, setting is_active to ${!user.is_active}`);
     this.userService.updateUserStatus(user.id, !user.is_active)
       .subscribe({
         next: (response) => {
-          console.log('Status update response:', response);
           user.is_active = !user.is_active;
         },
         error: (error) => {
-          console.error(`Error ${action}ing user:`, error);
           this.error = `Failed to ${action} user: ${error.message || error.statusText || 'Unknown error'}`;
         }
       });
@@ -195,35 +179,5 @@ export class UserListComponent implements OnInit {
 
   refreshUserList(): void {
     this.loadUsers();
-  }
-
-  checkAdminStatus(): void {
-    const currentUser = this.authService.currentUserValue;
-    console.log('Current User:', currentUser);
-    console.log('Is Admin:', this.authService.isAdmin());
-    console.log('Token:', localStorage.getItem('accessToken') ? 'Present' : 'Missing');
-    
-    if (currentUser) {
-      alert(`User: ${currentUser.email}\nRole: ${currentUser.role}\nAdmin: ${this.authService.isAdmin()}`);
-    } else {
-      if (confirm('No user logged in or session expired. Would you like to test login with admin@example.com?')) {
-        this.testLoginAsAdmin();
-      }
-    }
-  }
-  
-  testLoginAsAdmin(): void {
-    this.authService.testLogin('admin@example.com', 'adminpassword')
-      .subscribe({
-        next: (response) => {
-          console.log('Test login successful:', response);
-          alert('Login successful! Try refreshing the user list now.');
-          this.loadUsers();
-        },
-        error: (error) => {
-          console.error('Test login failed:', error);
-          alert(`Login failed: ${error.message || error.statusText || 'Unknown error'}`);
-        }
-      });
   }
 } 
