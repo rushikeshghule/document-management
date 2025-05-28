@@ -10,9 +10,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='document',
-            name='content',
-            field=models.TextField(blank=True, null=True),
-        ),
+        # No operations needed - content field is already added by migration 0004_document_content
     ] 
