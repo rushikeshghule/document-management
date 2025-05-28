@@ -170,7 +170,7 @@ export class DocumentDetailComponent implements OnInit {
       });
   }
 
-  triggerIngestion(id: number): void {
+  triggerIngestion(id: string): void {
     this.documentService.triggerIngestion(id)
       .subscribe({
         next: () => {

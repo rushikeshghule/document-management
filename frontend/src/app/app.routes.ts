@@ -34,7 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'documents/:id',
-    loadComponent: () => import('./components/documents/document-detail-new/document-detail-new.component').then(m => m.DocumentDetailNewComponent),
+    loadComponent: () => import('./components/documents/document-detail/document-detail.component').then(m => m.DocumentDetailComponent),
     canActivate: [authGuard]
   },
   {
