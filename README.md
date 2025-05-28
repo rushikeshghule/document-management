@@ -114,20 +114,7 @@ npm install
 npm start
 ```
 
-### Using PowerShell Scripts (Windows)
-For Windows users, we've provided helpful PowerShell scripts:
-```
-# Start both frontend and backend services
-.\start-app.ps1
 
-# Restart the application
-.\restart-app.ps1
-
-# Apply database migrations
-.\apply_migrations.ps1
-
-# Push code to GitHub
-.\push-to-github.ps1
 ```
 
 ## 📁 Project Structure
